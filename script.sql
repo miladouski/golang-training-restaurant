@@ -15,7 +15,7 @@ create table waiters
     waiter_id serial not null
         constraint waiters_pk
             primary key,
-    full_name text   not null
+    full_name varchar(50)   not null
 );
 
 create table order_content
@@ -30,7 +30,7 @@ create table menu
     dish_id          serial  not null
         constraint menu_pk
             primary key,
-    name             text    not null,
+    name             varchar(50)    not null,
     dish_category_id integer not null,
     price            integer
 );
@@ -40,7 +40,7 @@ create table ingredients
     ingredient_id serial  not null
         constraint ingredients_pk
             primary key,
-    name          text    not null,
+    name          varchar(50)    not null,
     price         integer not null
 );
 
@@ -56,7 +56,7 @@ create table dish_category
     dish_category_id serial not null
         constraint dish_category_pk
             primary key,
-    category_name    text   not null
+    category_name    varchar(50)   not null
 );
 
 INSERT INTO public.orders (id, date, table_number, waiter_id, price, payment) VALUES (1, '2021-04-02', 1, 1, 300, true);
