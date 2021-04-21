@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"github.com/gorilla/mux"
 	"github.com/miladouski/golang-training-restaurant/restaurant/pkg/api"
 	"github.com/miladouski/golang-training-restaurant/restaurant/pkg/data"
@@ -49,7 +48,6 @@ func main() {
 	}
 	r := mux.NewRouter()
 	orderData := data.NewOrderData(conn)
-	fmt.Println(orderData.Read(3))
 	api.ServeOrderResource(r, *orderData)
 	r.Use(mux.CORSMethodMiddleware(r))
 	listener, err := net.Listen("tcp", ":8080")

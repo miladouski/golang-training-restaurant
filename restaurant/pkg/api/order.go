@@ -76,7 +76,7 @@ func (o orderAPI) updateOrder(writer http.ResponseWriter, request *http.Request)
 		return
 	}
 	order.Id = int(id)
-	err = o.data.Update(order.Id, order.Price, order.Payment)
+	err = o.data.Update(order.Id, order.Payment)
 	if err != nil {
 		log.Println("order hasn't been updated")
 		writer.WriteHeader(http.StatusInternalServerError)

@@ -8,25 +8,25 @@ import (
 )
 
 type Order struct {
-	Id           int
-	Date         time.Time
-	Table_number int
-	WaiterId     int
-	Price        int
-	Payment      bool
+	Id          int
+	Date        time.Time
+	TableNumber int
+	WaiterId    int
+	Price       int
+	Payment     bool
 }
 
 type FullOrder struct {
-	Id           int
-	Date         time.Time
-	Table_number int
-	Waiter       string
-	Price        int
-	Payment      bool
+	Id          int
+	Date        time.Time
+	TableNumber int
+	FullName    string
+	Price       int
+	Payment     bool
 }
 
 func (o FullOrder) String() string {
-	return fmt.Sprintf("(%d %s %d %s %d %t)", o.Id, o.Date, o.Table_number, o.Waiter, o.Price, o.Payment)
+	return fmt.Sprintf("(%d %s %d %s %d %t)", o.Id, o.Date, o.TableNumber, o.FullName, o.Price, o.Payment)
 }
 
 type OrderData struct {

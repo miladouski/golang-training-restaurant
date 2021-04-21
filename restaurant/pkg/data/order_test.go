@@ -34,21 +34,21 @@ func NewGorm(db *sql.DB) *gorm.DB {
 }
 
 var testFullOrder = &FullOrder{
-	Id:           6,
-	Date:         time.Now(),
-	Table_number: 1,
-	Waiter:       "Mark",
-	Price:        124,
-	Payment:      true,
+	Id:          6,
+	Date:        time.Now(),
+	TableNumber: 1,
+	FullName:    "Mark",
+	Price:       124,
+	Payment:     true,
 }
 
 var testOrder = Order{
-	Id:           1,
-	Date:         time.Now(),
-	Table_number: 1,
-	WaiterId:     1,
-	Price:        124,
-	Payment:      true,
+	Id:          1,
+	Date:        time.Now(),
+	TableNumber: 1,
+	WaiterId:    1,
+	Price:       124,
+	Payment:     true,
 }
 
 func TestReadAll(t *testing.T) {
@@ -57,8 +57,8 @@ func TestReadAll(t *testing.T) {
 	defer db.Close()
 	gormDb := NewGorm(db)
 	data := NewOrderData(gormDb)
-	rows := sqlmock.NewRows([]string{"id", "Date", "Table_number", "Waiter", "Price", "Payment"}).
-		AddRow(testFullOrder.Id, testFullOrder.Date, testFullOrder.Table_number, testFullOrder.Waiter, testFullOrder.Price, testFullOrder.Payment)
+	rows := sqlmock.NewRows([]string{"id", "Date", "TableNumber", "FullName", "Price", "Payment"}).
+		AddRow(testFullOrder.Id, testFullOrder.Date, testFullOrder.TableNumber, testFullOrder.FullName, testFullOrder.Price, testFullOrder.Payment)
 	mock.ExpectQuery(readAllOrdersQuery).WillReturnRows(rows)
 	orders, err := data.ReadAll()
 	assert.NoError(err)
@@ -85,8 +85,8 @@ func TestRead(t *testing.T) {
 	defer db.Close()
 	gormDb := NewGorm(db)
 	data := NewOrderData(gormDb)
-	rows := sqlmock.NewRows([]string{"id", "Date", "Table_number", "Waiter", "Price", "Payment"}).
-		AddRow(testFullOrder.Id, testFullOrder.Date, testFullOrder.Table_number, testFullOrder.Waiter, testFullOrder.Price, testFullOrder.Payment)
+	rows := sqlmock.NewRows([]string{"id", "Date", "TableNumber", "FullName", "Price", "Payment"}).
+		AddRow(testFullOrder.Id, testFullOrder.Date, testFullOrder.TableNumber, testFullOrder.FullName, testFullOrder.Price, testFullOrder.Payment)
 	mock.ExpectQuery(readOrdersQuery).WithArgs(testFullOrder.Id).WillReturnRows(rows)
 	orders, err := data.Read(testFullOrder.Id)
 	assert.NoError(err)
