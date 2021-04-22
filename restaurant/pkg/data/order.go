@@ -39,9 +39,9 @@ func NewOrderData(db *gorm.DB) *OrderData {
 
 func (o OrderData) ReadAll() ([]FullOrder, error) {
 	var orders []FullOrder
-	err := o.db.Table("orders").
-		Select("orders.id, orders.date, orders.table_number, waiters.full_name, orders.price, orders.payment").
-		Joins("RIGHT JOIN waiters on waiters.waiter_id = orders.waiter_id").
+	err := o.db.Table(ordersTable).
+		Select(allOrders).
+		Joins(allOrdersJoin).
 		Find(&orders)
 	if err.Error != nil {
 		return nil, err.Error
@@ -51,10 +51,10 @@ func (o OrderData) ReadAll() ([]FullOrder, error) {
 
 func (o OrderData) Read(id int) (FullOrder, error) {
 	var order FullOrder
-	err := o.db.Table("orders").
-		Where("orders.id = ?", id).
-		Select("orders.id, orders.date, orders.table_number, waiters.full_name, orders.price, orders.payment").
-		Joins("RIGHT JOIN waiters on waiters.waiter_id = orders.waiter_id").
+	err := o.db.Table(ordersTable).
+		Where(readWhere, id).
+		Select(readOrder).
+		Joins(readOrderJoin).
 		Find(&order)
 
 	if err.Error != nil {
@@ -72,7 +72,7 @@ func (o OrderData) Create(order Order) error {
 }
 
 func (o OrderData) Update(id int, payment bool) error {
-	err := o.db.Table("orders").Where("orders.id = ?", id).Update("payment", payment)
+	err := o.db.Table(ordersTable).Where(readWhere, id).Update(updateColumn, payment)
 	if err.Error != nil {
 		return fmt.Errorf("error: %s", err.Error)
 	}
@@ -80,7 +80,7 @@ func (o OrderData) Update(id int, payment bool) error {
 }
 
 func (o OrderData) Delete(id int) error {
-	err := o.db.Where("orders.id = ?", id).Delete(&Order{})
+	err := o.db.Where(readWhere, id).Delete(&Order{})
 	if err.Error != nil {
 		return fmt.Errorf("error: %s", err.Error)
 	}
