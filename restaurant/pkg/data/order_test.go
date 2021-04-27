@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"errors"
 	"log"
+	"regexp"
 	"testing"
 	"time"
 
@@ -41,7 +42,7 @@ func TestReadAll(t *testing.T) {
 	assert := assert.New(t)
 	db, mock := NewMock()
 	defer db.Close()
-	data := NewOrderDate(db)
+	data := NewOrderData(db)
 	rows := sqlmock.NewRows([]string{"id", "Date", "table_number", "waiters.full_name", "Price", "Payment"}).AddRow(testFullOrder.Id, testFullOrder.Date, testFullOrder.Table, testFullOrder.Waiter, testFullOrder.Price, testFullOrder.Payment)
 	mock.ExpectQuery(readAllOrdersQuery).WillReturnRows(rows)
 	orders, err := data.ReadAll()
@@ -55,7 +56,7 @@ func TestReadAllErr(t *testing.T) {
 	assert := assert.New(t)
 	db, mock := NewMock()
 	defer db.Close()
-	data := NewOrderDate(db)
+	data := NewOrderData(db)
 	mock.ExpectQuery(readAllOrdersQuery).WillReturnError(errors.New("something went wrong..."))
 	users, err := data.ReadAll()
 	assert.Error(err)
@@ -66,7 +67,7 @@ func TestRead(t *testing.T) {
 	assert := assert.New(t)
 	db, mock := NewMock()
 	defer db.Close()
-	data := NewOrderDate(db)
+	data := NewOrderData(db)
 	rows := sqlmock.NewRows([]string{"id", "Date", "table_number", "waiters.full_name", "Price", "Payment"}).AddRow(testFullOrder.Id, testFullOrder.Date, testFullOrder.Table, testFullOrder.Waiter, testFullOrder.Price, testFullOrder.Payment)
 	mock.ExpectQuery(readAllOrdersQuery).WillReturnRows(rows)
 	orders, err := data.Read(1)
@@ -78,9 +79,81 @@ func TestReadErr(t *testing.T) {
 	assert := assert.New(t)
 	db, mock := NewMock()
 	defer db.Close()
-	data := NewOrderDate(db)
+	data := NewOrderData(db)
 	mock.ExpectQuery(readAllOrdersQuery).WillReturnError(errors.New("something went wrong..."))
 	users, err := data.Read(1)
 	assert.Error(err)
 	assert.Empty(users)
+}
+
+func TestCreate(t *testing.T) {
+	assert := assert.New(t)
+	db, mock := NewMock()
+	defer db.Close()
+	data := NewOrderData(db)
+	mock.ExpectExec(regexp.QuoteMeta(createOrderQuery)).
+		WithArgs(testOrder.Id, testOrder.Date, testOrder.Table, testOrder.WaiterId, testOrder.Price, testOrder.Payment).
+		WillReturnResult(sqlmock.NewResult(1, 1))
+	err := data.Create(testOrder)
+	assert.NoError(err)
+}
+
+func TestCreateErr(t *testing.T) {
+	assert := assert.New(t)
+	db, mock := NewMock()
+	defer db.Close()
+	data := NewOrderData(db)
+	mock.ExpectExec(regexp.QuoteMeta(createOrderQuery)).
+		WithArgs(testOrder.Id, testOrder.Date, testOrder.Table, testOrder.WaiterId, testOrder.Price, testOrder.Payment).
+		WillReturnError(errors.New("something went wrong..."))
+	err := data.Create(testOrder)
+	assert.Error(err)
+}
+
+func TestUpdate(t *testing.T) {
+	assert := assert.New(t)
+	db, mock := NewMock()
+	defer db.Close()
+	data := NewOrderData(db)
+	mock.ExpectExec(regexp.QuoteMeta(updateOrderQuery)).
+		WithArgs(testOrder.Price, testOrder.Payment, testOrder.Id).
+		WillReturnResult(sqlmock.NewResult(1, 1))
+	err := data.Update(testOrder.Id, testOrder.Price, testOrder.Payment)
+	assert.NoError(err)
+}
+
+func TestUpdateErr(t *testing.T) {
+	assert := assert.New(t)
+	db, mock := NewMock()
+	defer db.Close()
+	data := NewOrderData(db)
+	mock.ExpectExec(regexp.QuoteMeta(updateOrderQuery)).
+		WithArgs(testOrder.Price, testOrder.Payment, testOrder.Id).
+		WillReturnError(errors.New("something went wrong..."))
+	err := data.Update(testOrder.Id, testOrder.Price, testOrder.Payment)
+	assert.Error(err)
+}
+
+func TestDelete(t *testing.T) {
+	assert := assert.New(t)
+	db, mock := NewMock()
+	defer db.Close()
+	data := NewOrderData(db)
+	mock.ExpectExec(regexp.QuoteMeta(deleteOrderQuery)).
+		WithArgs(testOrder.Id).
+		WillReturnResult(sqlmock.NewResult(1, 1))
+	err := data.Delete(testOrder.Id)
+	assert.NoError(err)
+}
+
+func TestDeleteErr(t *testing.T) {
+	assert := assert.New(t)
+	db, mock := NewMock()
+	defer db.Close()
+	data := NewOrderData(db)
+	mock.ExpectExec(regexp.QuoteMeta(deleteOrderQuery)).
+		WithArgs(testOrder.Id).
+		WillReturnError(errors.New("something went wrong..."))
+	err := data.Delete(testOrder.Id)
+	assert.Error(err)
 }

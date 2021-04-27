@@ -33,7 +33,7 @@ type OrderData struct {
 	db *sql.DB
 }
 
-func NewOrderDate(db *sql.DB) *OrderData {
+func NewOrderData(db *sql.DB) *OrderData {
 	return &OrderData{db: db}
 }
 
@@ -71,7 +71,7 @@ func (o OrderData) Read(id int) (FullOrder, error) {
 func (o OrderData) Create(order Order) error {
 	_, err := o.db.Exec(createOrderQuery, order.Id, order.Date, order.Table, order.WaiterId, order.Price, order.Payment)
 	if err != nil {
-		return fmt.Errorf("can't inser order to database, error: %w", err)
+		return fmt.Errorf("can't insert order to database, error: %w", err)
 	}
 	return nil
 }

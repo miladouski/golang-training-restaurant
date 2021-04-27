@@ -1,11 +1,12 @@
 package main
 
 import (
-	"golang-training-restaurant/restaurant/pkg/data"
-	"golang-training-restaurant/restaurant/pkg/db"
 	"log"
 	"os"
 	"time"
+
+	"golang-training-restaurant/restaurant/pkg/data"
+	"golang-training-restaurant/restaurant/pkg/db"
 )
 
 var (
@@ -43,7 +44,7 @@ func main() {
 	if err != nil {
 		log.Fatalf("can't connect to database, error: %v", err)
 	}
-	orderData := data.NewOrderDate(conn)
+	orderData := data.NewOrderData(conn)
 	orders, err := orderData.ReadAll()
 	if err != nil {
 		log.Println(err)
