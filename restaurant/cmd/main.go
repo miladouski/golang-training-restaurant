@@ -1,11 +1,12 @@
 package main
 
 import (
-	"golang-training-restaurant/restaurant/pkg/data"
-	"golang-training-restaurant/restaurant/pkg/db"
 	"log"
 	"os"
 	"time"
+
+	"github.com/miladouski/golang-training-restaurant/restaurant/pkg/data"
+	"github.com/miladouski/golang-training-restaurant/restaurant/pkg/db"
 )
 
 var (
