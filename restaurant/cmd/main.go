@@ -2,9 +2,12 @@ package main
 
 import (
 	"log"
+	"net"
+	"net/http"
 	"os"
-	"time"
 
+	"github.com/gorilla/mux"
+	"github.com/miladouski/golang-training-restaurant/restaurant/pkg/api"
 	"github.com/miladouski/golang-training-restaurant/restaurant/pkg/data"
 	"github.com/miladouski/golang-training-restaurant/restaurant/pkg/db"
 )
@@ -44,27 +47,15 @@ func main() {
 	if err != nil {
 		log.Fatalf("can't connect to database, error: %v", err)
 	}
-	orderData := data.NewOrderDate(conn)
-	orders, err := orderData.ReadAll()
+	r := mux.NewRouter()
+	orderData := data.NewOrderData(conn)
+	api.ServeOrderResource(r, *orderData)
+	r.Use(mux.CORSMethodMiddleware(r))
+	listener, err := net.Listen("tcp", ":8080")
 	if err != nil {
-		log.Println(err)
+		log.Fatal("Server Listen port...")
 	}
-	order, err := orderData.Read(2)
-	if err != nil {
-		log.Println(err)
+	if err := http.Serve(listener, r); err != nil {
+		log.Fatal("Server has been crashed...")
 	}
-	err = orderData.Create(data.Order{Id: 6, Date: time.Now(), Table: 2, WaiterId: 3, Price: 356, Payment: true})
-	if err != nil {
-		log.Println(err)
-	}
-	err = orderData.Update(2, 500, false)
-	if err != nil {
-		log.Println(err)
-	}
-	err = orderData.Delete(6)
-	if err != nil {
-		log.Println(err)
-	}
-	log.Println(orders)
-	log.Println(order)
 }
