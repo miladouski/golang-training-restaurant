@@ -39,6 +39,7 @@ func NewOrderData(db *gorm.DB) *OrderData {
 
 func (o OrderData) ReadAll() ([]FullOrder, error) {
 	var orders []FullOrder
+
 	err := o.db.Table(ordersTable).
 		Select(allOrders).
 		Joins(allOrdersJoin).
@@ -64,6 +65,7 @@ func (o OrderData) Read(id int) (FullOrder, error) {
 }
 
 func (o OrderData) Create(order Order) error {
+
 	err := o.db.Create(&order)
 	if err.Error != nil {
 		return fmt.Errorf("error: %s", err.Error)
