@@ -1,14 +1,15 @@
 package main
 
 import (
-	"github.com/gorilla/mux"
-	"github.com/miladouski/golang-training-restaurant/restaurant/pkg/api"
-	"github.com/miladouski/golang-training-restaurant/restaurant/pkg/data"
-	"github.com/miladouski/golang-training-restaurant/restaurant/pkg/db"
 	"log"
 	"net"
 	"net/http"
 	"os"
+
+	"github.com/gorilla/mux"
+	"github.com/miladouski/golang-training-restaurant/restaurant/pkg/api"
+	"github.com/miladouski/golang-training-restaurant/restaurant/pkg/data"
+	"github.com/miladouski/golang-training-restaurant/restaurant/pkg/db"
 )
 
 var (

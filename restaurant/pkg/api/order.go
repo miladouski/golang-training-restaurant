@@ -2,12 +2,12 @@ package api
 
 import (
 	"encoding/json"
-	"github.com/miladouski/golang-training-restaurant/restaurant/pkg/data"
 	"log"
 	"net/http"
 	"strconv"
 
 	"github.com/gorilla/mux"
+	"github.com/miladouski/golang-training-restaurant/restaurant/pkg/data"
 )
 
 type orderAPI struct {
@@ -29,6 +29,7 @@ func (o orderAPI) getAllOrders(writer http.ResponseWriter, request *http.Request
 		_, err := writer.Write([]byte("got an error when tried to get orders"))
 		if err != nil {
 			log.Println(err)
+			writer.WriteHeader(http.StatusInternalServerError)
 		}
 	}
 	err = json.NewEncoder(writer).Encode(orders)
@@ -44,12 +45,12 @@ func (o orderAPI) createOrder(writer http.ResponseWriter, request *http.Request)
 	order := new(data.Order)
 	err := json.NewDecoder(request.Body).Decode(&order)
 	if err != nil {
-		log.Printf("failed reading JSON: %s\n", err)
+		log.Printf("failed reading JSON: %s", err)
 		writer.WriteHeader(http.StatusBadRequest)
 		return
 	}
 	if order == nil {
-		log.Printf("failed empty JSON\n")
+		log.Printf("failed empty JSON")
 		writer.WriteHeader(http.StatusBadRequest)
 		return
 	}
@@ -71,7 +72,7 @@ func (o orderAPI) updateOrder(writer http.ResponseWriter, request *http.Request)
 	}
 	err = json.NewDecoder(request.Body).Decode(&order)
 	if err != nil {
-		log.Printf("failed reading JSON: %s\n", err)
+		log.Printf("failed reading JSON: %s", err)
 		writer.WriteHeader(http.StatusBadRequest)
 		return
 	}
@@ -109,7 +110,7 @@ func (o orderAPI) FindOrder(writer http.ResponseWriter, request *http.Request) {
 	}
 	order, err := o.data.Read(int(id))
 	if err != nil {
-		log.Println("order hasn't been find")
+		log.Println("order not found")
 		writer.WriteHeader(http.StatusNotFound)
 		return
 	}
